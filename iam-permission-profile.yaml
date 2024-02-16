@@ -1,0 +1,661 @@
+openapi: 3.0.0
+info:
+  version: "1.0.0"
+  title: IAM Permission Profile
+  description: |
+    The Permission Profile Notification API support retrieving permission profile of user. The returned response will be in json format.
+
+    The API includes the following capabilities.
+    1. Retrieve service's health status, the returned response will be health status of service and health status of service's  dependencies.
+    2. Retrieve a single permission profile data of user by user's uuid.
+    3. Retrieve a list of permission profiles data of users by user's uuids.
+
+servers:
+  - url: https://api.refinitiv.com/iam/permission-profile/v1
+    description: Production environment
+  - url: https://api.ppe.refinitiv.com/iam/permission-profile/v1
+    description: Pre-production environment
+  - url: https://us-east-1-api.dev.refinitiv.com/iam/permission-profile/v1
+    description: Development environment
+
+tags:
+  - name: Health Check
+    description: ""
+  - name: Permission Profile
+    description: ""
+  - name: CORS
+    description: ""
+paths:
+  "/health":
+    get:
+      tags:
+        - Health Check
+      summary: Get service's health
+      operationId: healthCheck
+      description: |
+        Get service's health status
+      security:
+        - oAuth2Sts: [trapi.profile.person.read]
+      parameters:
+        - in: header
+          required: true
+          name: RefinitivUuid
+          description: |
+            The RefinitivUuid Header value. This must be the refinitiv UUID of the person
+            / acoount making the request
+          schema:
+            type: string
+            format: uuid
+        - in: header
+          name: X-Correlation-ID
+          description: |
+            The correlation Id used for log tracing. If not supplied one will be created,
+            If supplied that will be used with all downstream calls
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+        400:
+          $ref: "#/components/responses/400Error"
+        401:
+          $ref: "#/components/responses/401Error"
+        403:
+          $ref: "#/components/responses/403Error"
+        404:
+          $ref: "#/components/responses/404Error"
+        405:
+          $ref: "#/components/responses/405Error"
+        408:
+          $ref: "#/components/responses/408Error"
+        415:
+          $ref: "#/components/responses/415Error"
+        429:
+          $ref: "#/components/responses/429Error"
+        500:
+          $ref: "#/components/responses/500Error"
+        502:
+          $ref: "#/components/responses/502Error"
+        503:
+          $ref: "#/components/responses/503Error"
+        504:
+          $ref: "#/components/responses/504Error"
+    options:
+      description: |
+        To provide the available operations (HTTP methods) of a given endpoint.
+      tags:
+        - CORS
+      responses:
+        200:
+          $ref: "#/components/responses/Options200Response"
+  "/permission-profiles/{uuid}":
+    get:
+      tags:
+        - Permission Profile
+      operationId: getPermissionProfileById
+      description: |
+        to get permission Profile of By user's uuid
+      security:
+        - oAuth2Sts: [trapi.profile.person.read]
+      parameters:
+        - in: path
+          name: uuid
+          description: pass an user's uuid
+          required: true
+          schema:
+            type: string
+            example: GESG1-210562
+        - in: header
+          required: true
+          name: refinitivUuid
+          description: |
+            The RefinitivUuid Header value. This must be the refinitiv UUID of the person
+            / acoount making the request
+          schema:
+            type: string
+            format: uuid
+        - in: header
+          name: X-Correlation-ID
+          description: |
+            The correlation Id used for log tracing. If not supplied one will be created,
+            If supplied that will be used with all downstream calls
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PermissionProfile"
+        400:
+          $ref: "#/components/responses/400Error"
+        401:
+          $ref: "#/components/responses/401Error"
+        403:
+          $ref: "#/components/responses/403Error"
+        404:
+          $ref: "#/components/responses/404Error"
+        405:
+          $ref: "#/components/responses/405Error"
+        408:
+          $ref: "#/components/responses/408Error"
+        415:
+          $ref: "#/components/responses/415Error"
+        429:
+          $ref: "#/components/responses/429Error"
+        500:
+          $ref: "#/components/responses/500Error"
+        502:
+          $ref: "#/components/responses/502Error"
+        503:
+          $ref: "#/components/responses/503Error"
+        504:
+          $ref: "#/components/responses/504Error"
+    put:
+      tags:
+        - Permission Profile
+      operationId: createPermissionProfile
+      description: |
+        To create or update permission profile.
+      security:
+        - oAuth2Sts: [trapi.profile.person.read]
+      parameters:
+        - in: path
+          name: uuid
+          description: pass an user's uuid
+          required: true
+          schema:
+            type: string
+            example: GESG1-210562
+        - in: header
+          required: true
+          name: refinitivUuid
+          description: |
+            The RefinitivUuid Header value. This must be the refinitiv UUID of the person
+            / acoount making the request
+          schema:
+            type: string
+            format: uuid
+        - in: header
+          name: X-Correlation-ID
+          description: |
+            The correlation Id used for log tracing. If not supplied one will be created,
+            If supplied that will be used with all downstream calls
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PermissionProfile"
+        "201":
+          description: Item created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PermissionProfile"
+        400:
+          $ref: "#/components/responses/400Error"
+        401:
+          $ref: "#/components/responses/401Error"
+        403:
+          $ref: "#/components/responses/403Error"
+        404:
+          $ref: "#/components/responses/404Error"
+        405:
+          $ref: "#/components/responses/405Error"
+        408:
+          $ref: "#/components/responses/408Error"
+        415:
+          $ref: "#/components/responses/415Error"
+        429:
+          $ref: "#/components/responses/429Error"
+        500:
+          $ref: "#/components/responses/500Error"
+        502:
+          $ref: "#/components/responses/502Error"
+        503:
+          $ref: "#/components/responses/503Error"
+        504:
+          $ref: "#/components/responses/504Error"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateUpdatePermissionProfile"
+        description: Permission Profile transaction to add
+    options:
+      description: |
+        To provide the available operations (HTTP methods) of a given endpoint.
+      tags:
+        - CORS
+      parameters:
+        - in: path
+          name: uuid
+          description: pass an user's uuid
+          required: true
+          schema:
+            type: string
+            example: GESG1-210562
+      responses:
+        200:
+          $ref: "#/components/responses/Options200Response"
+  "/permission-profiles":
+    options:
+      description: |
+        To provide the available operations (HTTP methods) of a given endpoint.
+      tags:
+        - CORS
+      responses:
+        200:
+          $ref: "#/components/responses/Options200Response"
+    get:
+      tags:
+        - Permission Profile
+      operationId: getMultiplePermissionProfile
+      description: |
+        Retrieve a list of permission profiles by filtering based on the UUIDs of users.
+      security:
+        - oAuth2Sts: [trapi.profile.person.read]
+      parameters:
+        - in: query
+          required: true
+          name: uuids
+          description: |
+            A comma-separated string containing UUIDs of users, used to search for `permission profile` associated with the sepecified UUIDs. The maximum allowed length is 25 UUIDs.
+          schema:
+            type: string
+            example: GESG1-210562,GESG1-210563
+        - in: query
+          required: true
+          name: offset
+          description: |
+            The number of records that need to be skipped
+          schema:
+            type: integer
+            example: 10
+        - in: query
+          required: true
+          name: limit
+          description: |
+            The number of results
+          schema:
+            type: integer
+            example: 5
+        - in: header
+          required: true
+          name: refinitivUuid
+          description: |
+            The RefinitivUuid Header value. This must be the refinitiv UUID of the person
+            / acoount making the request
+          schema:
+            type: string
+            format: uuid
+        - in: header
+          name: X-Correlation-ID
+          description: |
+            The correlation Id used for log tracing. If not supplied one will be created,
+            If supplied that will be used with all downstream calls
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/PaginationResponse"
+                  - type: object
+                    properties:
+                      data:
+                        description: "An array of the data"
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/PermissionProfile"
+        400:
+          $ref: "#/components/responses/400Error"
+        401:
+          $ref: "#/components/responses/401Error"
+        403:
+          $ref: "#/components/responses/403Error"
+        404:
+          $ref: "#/components/responses/404Error"
+        405:
+          $ref: "#/components/responses/405Error"
+        408:
+          $ref: "#/components/responses/408Error"
+        415:
+          $ref: "#/components/responses/415Error"
+        429:
+          $ref: "#/components/responses/429Error"
+        500:
+          $ref: "#/components/responses/500Error"
+        502:
+          $ref: "#/components/responses/502Error"
+        503:
+          $ref: "#/components/responses/503Error"
+        504:
+          $ref: "#/components/responses/504Error"
+
+components:
+  securitySchemes:
+    oAuth2Sts:
+      type: oauth2
+      description: See https://api.ppe.refinitiv.com/auth/oauth2
+      flows:
+        password:
+          tokenUrl: https://api.ppe.refinitiv.com/auth/oauth2/token
+          # Delete below scopes and add your application scopes here
+          scopes:
+            trapi.profile.person.read: Grant read-only access to Person
+            trapi.profile.person.write: Grant write-only access to person
+  responses:
+    Options200Response:
+      description: Default response for CORS method
+      headers:
+        Access-Control-Allow-Origin:
+          schema:
+            type: string
+        Access-Control-Allow-Methods:
+          schema:
+            type: string
+        Access-Control-Allow-Headers:
+          schema:
+            type: string
+      content: {}
+    400Error:
+      description: "Invalid input"
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: "#/components/schemas/Error"
+              - $ref: "#/components/schemas/AlternateErrorObj"
+    401Error:
+      description: "Unauthorized"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    403Error:
+      description: "Insufficient authorization for requested information"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    404Error:
+      description: "Not Found"
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: "#/components/schemas/Error"
+              - type: string
+                description: A human-readable explanation/reason specific to this occurrence of the problem
+                example: "404 page not found"
+    405Error:
+      description: "Method Not Allowed"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    408Error:
+      description: "Request Time-out"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    415Error:
+      description: "Unsupported Media Type"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    429Error:
+      description: "Too Many Requests"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    500Error:
+      description: "Internal Server Error."
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    502Error:
+      description: "Bad Gateway"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    503Error:
+      description: "Service Unavailable."
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    504Error:
+      description: "Gateway Timout"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+  schemas:
+    PermissionProfile:
+      type: object
+      required:
+        - uuid
+        # - user
+        - permissionProfile
+        - version
+      properties:
+        uuid:
+          description: unique identifier of a user, can used to search for specific user accounts.
+          type: string
+          example: GESG1-210562
+        version:
+          description: The version number of item, this value increments with each update.
+          type: integer
+          example: 1
+        permissionProfile:
+          $ref: "#/components/schemas/Permission"
+        updatedOn:
+          description: "Timestamp when permission profile is updated. (Format: 2024-01-16T09:15:59.6258811+00:00)"
+          type: string
+          format: date-time
+          example: "2016-08-29T09:12:33.001Z"
+        createdOn:
+          description: "Timestamp when permission profile is created. (Format: 2024-01-16T09:15:59.6258811+00:00)"
+          type: string
+          format: date-time
+          example: "2016-08-29T09:12:33.001Z"
+    Permission:
+      description: "permission profile"
+      type: object
+      required:
+        - serviceProfiles
+      properties:
+        serviceProfiles:
+          description: "permission grouped by service name"
+          type: array
+          items:
+            "$ref": "#/components/schemas/ServiceProfile"
+    ServiceProfile:
+      type: object
+      required:
+        - service
+        - productCodes
+      properties:
+        service:
+          description: "service name (CDD Namespace)"
+          type: string
+          example: IDN
+        productCodes:
+          description: "list of permission code"
+          type: array
+          items:
+            type: string
+            example: EIKONASYM
+    CreateUpdatePermissionProfile:
+      type: object
+      required:
+        - permissionProfile
+      properties:
+        permissionProfile:
+          $ref: "#/components/schemas/Permission"
+    HealthResponse:
+      type: object
+      required:
+        - id
+        - status
+        - detail
+      properties:
+        id:
+          description: "unique identifier for the request"
+          type: string
+          format: uuid
+          example: bffb6adb-a3e6-40fb-8be5-15009da0ebf0
+        status:
+          description: |
+            Indicates whether the service status is acceptable or not
+            \"pass\": healthy
+            \"fail\": unhealthy and
+            \"warn\": healthy with some concerns.
+          type: string
+          example: pass
+        details:
+          $ref: "#/components/schemas/DependenciesStatus"
+    DependenciesStatus:
+      description: "status of the dependencies of service."
+      type: object
+      properties:
+        dynamoDb:
+          description: "status of DynamoDb"
+          type: array
+          items:
+            $ref: "#/components/schemas/Status"
+        sns:
+          description: "status of SNS (Simple Notification Service)"
+          type: array
+          items:
+            $ref: "#/components/schemas/Status"
+    PaginationResponse:
+      type: object
+      required:
+        - meta
+        - data
+      properties:
+        meta:
+          description: "The information about next and previous page"
+          type: object
+          properties:
+            next:
+              description: "URL of next page"
+              type: string
+              example: "https://api.example.com/v1/permission-profile/?uuids=GESG1-210562,GESG1-210563&offset=15&limit=5"
+            prev:
+              description: "URL of previous page"
+              type: string
+              example: "https://api.example.com/v1/permission-profile/?uuids=GESG1-210562,GESG1-210563&offset=5&limit=5"
+    Status:
+      type: object
+      properties:
+        status:
+          description: "Status of dependency"
+          type: string
+          example: pass
+    # The error definition
+    Error:
+      title: Standard Error Definition
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          description: Standard Error Object
+          type: object
+          required:
+            - id
+            - code
+            - message
+          properties:
+            id:
+              description: A unique UUID tracking/correlation ID for that request
+              title: Request ID
+              type: string
+              format: uuid
+              example: "fe752b7c-b71e-4a3b-be0b-201a66b7bd4e"
+            code:
+              description: "An application-specific error code, expressed as a string value"
+              type: string
+              title: Error code
+              example: "400-invalid-input"
+            message:
+              description: "A human-readable explanation/reason specific to this occurrence of the problem."
+              type: string
+              title: Error message
+              example: "Authorization header is missing"
+            status:
+              type: string
+              description: The HTTP status
+              title: HTTP status
+              example: 400
+            errors:
+              description: Additional information about problems encountered while performing an operation, an object containing references to the source of the error.
+              type: array
+              items:
+                type: object
+                required:
+                  - key
+                  - reason
+                properties:
+                  key:
+                    description: The key in the request/path that causing the error
+                    type: string
+                    title: key
+                    example: "x-billing"
+                  reason:
+                    description: The reason/cause of the error.
+                    type: string
+                    title: value
+                    example: "validation failure: x-billing in header is required"
+                  name:
+                    description: The field name causing the error
+                    type: string
+                    title: invalidValue
+                  invalidName:
+                    description: A flag indicate whether the name is invalid name or not.
+                    type: string
+                    title: invalidName
+
+    # The error definition - This is another representation type for error object.
+    AlternateErrorObj:
+      title: Another type of Error Definition. This type of error response returned by AAA system for authentication related errors.
+      type: object
+      required:
+        - error
+        - error_description
+      properties:
+        error:
+          description: An application-specific error code, expressed as a string value
+          title: Errro code
+          type: string
+          example: "access_denied"
+        errorDescription:
+          description: A human-readable explanation/reason specific to this occurrence of the problem
+          title: Errro Description
+          type: string
+          example: "Invalid username or password."
